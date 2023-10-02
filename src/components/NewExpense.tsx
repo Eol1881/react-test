@@ -10,14 +10,33 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-
 import { SelectChangeEvent } from '@mui/material/Select';
 
-export function NewExpense() {
-  const [selectedType, setSelectedType] = useState('other');
+import { addExpense } from '../utils/firebaseLogic';
 
-  function handleChange(event: SelectChangeEvent<string>) {
-    setSelectedType(event.target.value);
+export function NewExpense() {
+  const [expenseType, setExpenseType] = useState('');
+  const [expenseAmount, setExpenseAmount] = useState('');
+
+  function handleExpenseTypeChange(event: SelectChangeEvent<string>) {
+    setExpenseType(event.target.value);
+  }
+
+  async function handleAddExpenseButtonClick() {
+    console.log(expenseAmount, expenseType, Date.now());
+    if (!expenseAmount) return;
+    await addExpense(Date.now(), parseInt(expenseAmount), expenseType || 'other');
+  }
+
+  function handleExpenseInputChange(
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) {
+    if (parseInt(event.target.value) < 1) event.target.value = '';
+    setExpenseAmount(event.target.value);
+  }
+
+  function handleExpenseInputKeydown(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.key === '-') event.preventDefault();
   }
 
   return (
@@ -33,25 +52,17 @@ export function NewExpense() {
           label="Потрачено"
           variant="outlined"
           type="number"
-          onChange={(e) => {
-            if (parseInt(e.target.value) < 1) {
-              e.target.value = '';
-            }
-          }}
-          onKeyDown={(e) => {
-            if (e.key === '-') {
-              e.preventDefault();
-            }
-          }}
+          onChange={handleExpenseInputChange}
+          onKeyDown={handleExpenseInputKeydown}
         />
         <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Тип покупки</InputLabel>
+          <InputLabel id="expense-type-select-label">Тип покупки</InputLabel>
           <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={selectedType}
+            labelId="expense-type-select-label"
+            id="expense-type-select"
+            value={expenseType}
             label="expense-type"
-            onChange={handleChange}
+            onChange={handleExpenseTypeChange}
           >
             <MenuItem value={'food'}>🍔 Еда</MenuItem>
             <MenuItem value={'smoke'}>🚬 Табак</MenuItem>
@@ -63,7 +74,9 @@ export function NewExpense() {
         </FormControl>
       </CardContent>
       <CardActions sx={{ p: 2 }}>
-        <Button variant="contained">Добавить</Button>
+        <Button variant="contained" onClick={handleAddExpenseButtonClick}>
+          Добавить
+        </Button>
       </CardActions>
     </Card>
   );
