@@ -35,6 +35,12 @@ export function NewExpense({
     if (event.key === '-') event.preventDefault();
   }
 
+  function handleAddExpenseClick() {
+    addExpenseHandler(expenseAmount, expenseType);
+    setExpenseType('');
+    setExpenseAmount('');
+  }
+
   return (
     <Card sx={{ maxWidth: 320, textAlign: 'left', mb: 5 }}>
       <CardContent>
@@ -50,6 +56,7 @@ export function NewExpense({
           type="number"
           onChange={handleExpenseAmountChange}
           onKeyDown={handleExpenseInputKeydown}
+          value={expenseAmount}
         />
         <FormControl fullWidth>
           <InputLabel id="expense-type-select-label">Тип покупки</InputLabel>
@@ -71,12 +78,7 @@ export function NewExpense({
         </FormControl>
       </CardContent>
       <CardActions sx={{ p: 2 }}>
-        <Button
-          variant="contained"
-          onClick={() => {
-            addExpenseHandler(expenseAmount, expenseType);
-          }}
-        >
+        <Button variant="contained" onClick={handleAddExpenseClick}>
           Добавить
         </Button>
       </CardActions>

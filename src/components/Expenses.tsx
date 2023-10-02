@@ -7,15 +7,16 @@ import {
 } from '../utils/firebaseLogic';
 import { ExpensesList } from './ExpensesList';
 import { NewExpense } from './NewExpense';
+import { TotalBrowser } from './TotalBrowser';
 
 export function Expenses() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
 
   async function addExpenseHandler(expenseAmount: string, expenseType?: string) {
-    console.log('Expense added!', expenseAmount, expenseType, Date.now());
     if (!expenseAmount) return;
+    console.log('Expense added!', expenseAmount, expenseType, Date.now());
     await addExpenseToDatabase(Date.now(), parseInt(expenseAmount), expenseType || 'other');
-    const updatedExpanses = [
+    const updatedExpenses = [
       ...expenses,
       {
         timestamp: Date.now(),
@@ -23,13 +24,13 @@ export function Expenses() {
         type: expenseType || 'other',
       },
     ];
-    setExpenses(updatedExpanses);
+    setExpenses(updatedExpenses);
   }
 
   async function removeExpenseHandler(expenseTimestamp: number) {
     removeExpenseFromDatabase(expenseTimestamp);
-    const updatedExpanses = expenses.filter((expense) => expense.timestamp !== expenseTimestamp);
-    setExpenses(updatedExpanses);
+    const updatedExpenses = expenses.filter((expense) => expense.timestamp !== expenseTimestamp);
+    setExpenses(updatedExpenses);
   }
 
   async function fetchExpenses() {
@@ -45,6 +46,7 @@ export function Expenses() {
   return (
     <div className="expenses-container">
       <NewExpense addExpenseHandler={addExpenseHandler}></NewExpense>
+      <TotalBrowser expenses={expenses}></TotalBrowser>
       <ExpensesList expenses={expenses} removeExpenseHandler={removeExpenseHandler}></ExpensesList>
     </div>
   );
