@@ -1,61 +1,51 @@
-import { useEffect, useState } from 'react';
-import { getLastMonthExpenses } from '../utils/firebaseLogic';
-import { getExpenceIcon } from '../utils/getExpenceIcon';
-import { getFormattedDate } from '../utils/getFormattedDate';
+import { useState, useEffect } from 'react';
+import { Expense } from '../types/Expense';
+import {
+  addExpenseToDatabase,
+  getLastMonthExpenses,
+  removeExpenseFromDatabase,
+} from '../utils/firebaseLogic';
+import { ExpensesList } from './ExpensesList';
+import { NewExpense } from './NewExpense';
 
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import Card from '@mui/material/Card';
-
-export const Expenses = () => {
+export function Expenses() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
 
-  interface Expense {
-    timeStamp: number;
-    type: string;
-    value: string;
+  async function addExpenseHandler(expenseAmount: string, expenseType?: string) {
+    console.log('Expense added!', expenseAmount, expenseType, Date.now());
+    if (!expenseAmount) return;
+    await addExpenseToDatabase(Date.now(), parseInt(expenseAmount), expenseType || 'other');
+    const updatedExpanses = [
+      ...expenses,
+      {
+        timestamp: Date.now(),
+        value: expenseAmount,
+        type: expenseType || 'other',
+      },
+    ];
+    setExpenses(updatedExpanses);
   }
 
-  const updateExpenses = async () => {
+  async function removeExpenseHandler(expenseTimestamp: number) {
+    removeExpenseFromDatabase(expenseTimestamp);
+    const updatedExpanses = expenses.filter((expense) => expense.timestamp !== expenseTimestamp);
+    setExpenses(updatedExpanses);
+  }
+
+  async function fetchExpenses() {
     const expenses = await getLastMonthExpenses();
     setExpenses(expenses);
-    console.log('Expenses updated successfully!');
-  };
+    console.log('ExpensesList updated successfully!');
+  }
 
   useEffect(() => {
-    updateExpenses();
+    fetchExpenses();
   }, []);
 
   return (
-    <Card sx={{ maxWidth: 320, textAlign: 'left', mb: 5 }}>
-      <List>
-        {expenses.map((expense) => {
-          const labelId = `expense-label-${expense.timeStamp}`;
-
-          return (
-            <ListItem
-              key={expense.timeStamp}
-              secondaryAction={
-                <IconButton>
-                  <DeleteIcon />
-                </IconButton>
-              }
-              disablePadding
-              sx={{ pl: 1 }}
-            >
-              <ListItemButton role={undefined} dense>
-                <ListItemText id={labelId} primary={`${getExpenceIcon(expense.type)}`} />
-                <ListItemText id={labelId} primary={`${expense.value} RUB`} />
-                <ListItemText id={labelId} primary={`${getFormattedDate(expense.timeStamp)}`} />
-              </ListItemButton>
-            </ListItem>
-          );
-        })}
-      </List>
-    </Card>
+    <div className="expenses-container">
+      <NewExpense addExpenseHandler={addExpenseHandler}></NewExpense>
+      <ExpensesList expenses={expenses} removeExpenseHandler={removeExpenseHandler}></ExpensesList>
+    </div>
   );
-};
+}

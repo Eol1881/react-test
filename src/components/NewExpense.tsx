@@ -12,9 +12,11 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { SelectChangeEvent } from '@mui/material/Select';
 
-import { addExpense } from '../utils/firebaseLogic';
-
-export function NewExpense() {
+export function NewExpense({
+  addExpenseHandler,
+}: {
+  addExpenseHandler: (expenseAmount: string, expenseType?: string) => Promise<void>;
+}) {
   const [expenseType, setExpenseType] = useState('');
   const [expenseAmount, setExpenseAmount] = useState('');
 
@@ -22,13 +24,7 @@ export function NewExpense() {
     setExpenseType(event.target.value);
   }
 
-  async function handleAddExpenseButtonClick() {
-    console.log(expenseAmount, expenseType, Date.now());
-    if (!expenseAmount) return;
-    await addExpense(Date.now(), parseInt(expenseAmount), expenseType || 'other');
-  }
-
-  function handleExpenseInputChange(
+  function handleExpenseAmountChange(
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) {
     if (parseInt(event.target.value) < 1) event.target.value = '';
@@ -52,7 +48,7 @@ export function NewExpense() {
           label="Потрачено"
           variant="outlined"
           type="number"
-          onChange={handleExpenseInputChange}
+          onChange={handleExpenseAmountChange}
           onKeyDown={handleExpenseInputKeydown}
         />
         <FormControl fullWidth>
@@ -67,6 +63,7 @@ export function NewExpense() {
             <MenuItem value={'food'}>🍔 Еда</MenuItem>
             <MenuItem value={'smoke'}>🚬 Табак</MenuItem>
             <MenuItem value={'fun'}>🎉 Развлечения</MenuItem>
+            <MenuItem value={'medicine'}>💊 Здоровье</MenuItem>
             <MenuItem value={'repairs'}>🔧 Ремонт</MenuItem>
             <MenuItem value={'upgrades'}>📱 Апгрейды</MenuItem>
             <MenuItem value={'other'}>✨ Другое</MenuItem>
@@ -74,7 +71,12 @@ export function NewExpense() {
         </FormControl>
       </CardContent>
       <CardActions sx={{ p: 2 }}>
-        <Button variant="contained" onClick={handleAddExpenseButtonClick}>
+        <Button
+          variant="contained"
+          onClick={() => {
+            addExpenseHandler(expenseAmount, expenseType);
+          }}
+        >
           Добавить
         </Button>
       </CardActions>

@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, onValue, get, set } from 'firebase/database';
+import { Expense } from '../types/Expense';
 
 // Firebase configuration
 const firebaseConfig = {
@@ -20,12 +21,6 @@ const db = getDatabase(app);
 // Get a reference to the expenses array
 const expensesArrayRef = ref(db, 'expenses-array-3');
 
-interface Expense {
-  timeStamp: number;
-  type: string;
-  value: string;
-}
-
 function getExpensesInRange(startTimestamp: number, endTimestamp: number) {
   return new Promise<Expense[]>((resolve, reject) => {
     onValue(
@@ -35,7 +30,7 @@ function getExpensesInRange(startTimestamp: number, endTimestamp: number) {
 
         // Filter expenses within the specified time range
         const expensesInRange: Expense[] = expensesArray.filter((expense: Expense) => {
-          return expense.timeStamp >= startTimestamp && expense.timeStamp <= endTimestamp;
+          return expense.timestamp >= startTimestamp && expense.timestamp <= endTimestamp;
         });
 
         // Resolve the promise with the filtered expenses
@@ -57,9 +52,9 @@ export async function getLastMonthExpenses() {
   return expensesInLastMonth;
 }
 
-export async function addExpense(timeStamp: number, value: number, type: string) {
+export async function addExpenseToDatabase(timestamp: number, value: number, type: string) {
   const expenseDataObj = {
-    timeStamp,
+    timestamp,
     value,
     type,
   };
@@ -74,12 +69,12 @@ export async function addExpense(timeStamp: number, value: number, type: string)
   }
 }
 
-export async function removeExpense(timeStamp: number) {
+export async function removeExpenseFromDatabase(timestamp: number) {
   try {
     onValue(expensesArrayRef, async (snapshot) => {
       const expensesArray = snapshot.val() || [];
       const updatedExpensesArray = expensesArray.filter(
-        (expense: Expense) => expense.timeStamp !== timeStamp
+        (expense: Expense) => expense.timestamp !== timestamp
       );
       await set(expensesArrayRef, updatedExpensesArray);
     });

@@ -19,6 +19,9 @@ export function getExpenceIcon(expenseType: string) {
     case 'other':
       icon = '✨';
       break;
+    case 'medicine':
+      icon = '💊';
+      break;
     default:
       icon = '❓';
       break;
