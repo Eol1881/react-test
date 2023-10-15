@@ -26,6 +26,11 @@ export function TotalBrowser({ expenses }: { expenses: Expense[] }) {
     return acc;
   }, {});
 
+  const grandTotalExpenses = Object.values(totalExpenses).reduce(
+    (acc: number, item: number) => acc + item,
+    0
+  );
+
   return (
     <Card sx={{ maxWidth: 320, textAlign: 'left', mb: 5 }}>
       <List>
@@ -51,6 +56,15 @@ export function TotalBrowser({ expenses }: { expenses: Expense[] }) {
             </ListItem>
           );
         })}
+
+        <ListItem key={Date.now()} disablePadding sx={{ pl: 2, display: 'flex' }}>
+          <ListItemText
+            sx={{ textAlign: 'right', mr: 4, mt: 1, borderTop: '1px solid black' }}
+            id={'total'}
+            primary={`${grandTotalExpenses} RUB`}
+            primaryTypographyProps={{ fontWeight: '500' }}
+          />
+        </ListItem>
       </List>
     </Card>
   );
