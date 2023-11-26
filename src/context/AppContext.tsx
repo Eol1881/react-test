@@ -1,5 +1,5 @@
 import { Dispatch, ReactNode, createContext, useState } from 'react';
-import { dateExtractor } from '../utils/getFirstDayOfMonth';
+import { dateExtractor } from '../utils/dateExtractor';
 import { Expense } from '../api/types';
 
 export interface DateRange {

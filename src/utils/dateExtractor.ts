@@ -39,6 +39,11 @@ class DateExtractor {
     endOfDay.setHours(23, 59, 59);
     return endOfDay;
   };
+
+  getTwoWeeksAgo = () => {
+    const twoWeeksAgo = new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate() - 14);
+    return twoWeeksAgo;
+  };
 }
 
 export const dateExtractor = new DateExtractor();

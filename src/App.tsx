@@ -4,11 +4,17 @@ import { Root } from './routes/Root';
 
 import { ErrorPage } from './routes/ErrorPage';
 import { AppContextProvider } from './context/AppContext';
+import { HistoryPage } from './routes/HistoryPage';
 
 export const routerConfig = [
   {
     path: '/',
     element: <Root />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: '/history',
+    element: <HistoryPage />,
     errorElement: <ErrorPage />,
   },
 ];

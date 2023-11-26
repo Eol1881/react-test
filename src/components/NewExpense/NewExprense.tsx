@@ -6,30 +6,35 @@ import { ExpenseType } from '../../constants/expensesMap';
 import { addExpenseToDatabase } from '../../api/firebase';
 import { AppContext } from '../../context/AppContext';
 
+import { ArrowRightIcon } from '@heroicons/react/outline';
+import { useNavigate } from 'react-router-dom';
+
 export const NewExpense = () => {
+  const navigate = useNavigate();
+
   const [value, setValue] = useState<number>(0);
   const [expenseType, setExpenseType] = useState<ExpenseType>('other');
 
   const { expenses, setExpenses } = useContext(AppContext);
 
-  async function addExpenseHandler(expenseAmount: string, expenseType?: string) {
-    if (!expenseAmount) return;
-    await addExpenseToDatabase(Date.now(), parseInt(expenseAmount), expenseType || 'other');
+  async function addExpenseHandler() {
+    if (!value) return;
+    setExpenseType('other');
+    setValue(0);
+    await addExpenseToDatabase(Date.now(), value, expenseType || 'other');
     const updatedExpenses = [
       ...expenses,
       {
         timestamp: Date.now(),
-        value: expenseAmount,
+        value: value.toString(),
         type: expenseType || 'other',
       },
     ];
     setExpenses(updatedExpenses);
   }
 
-  const addNewExpense = () => {
-    if (typeof value?.toString() === 'string') addExpenseHandler(value?.toString(), expenseType);
-    setExpenseType('other');
-    setValue(0);
+  const toHistoryHandler = () => {
+    navigate('/history');
   };
 
   return (
@@ -37,7 +42,12 @@ export const NewExpense = () => {
       <Metric>Новая покупка</Metric>
       <NumberInput icon={CurrencyDollarIcon} value={value} onValueChange={setValue} placeholder="Потречено" />
       <ExpenseSelect expenseTypeChangeHandler={setExpenseType}></ExpenseSelect>
-      <Button onClick={addNewExpense}>Добавить</Button>
+      <div className="flex justify-between">
+        <Button onClick={addExpenseHandler}>Добавить</Button>
+        <Button iconPosition="right" icon={ArrowRightIcon} variant="secondary" onClick={toHistoryHandler}>
+          История
+        </Button>
+      </div>
     </Card>
   );
 };

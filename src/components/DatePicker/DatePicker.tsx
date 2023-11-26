@@ -1,7 +1,7 @@
 import { DateRangePicker, DateRangePickerItem, DateRangePickerValue } from '@tremor/react';
 import { ru } from 'date-fns/locale';
 import { useContext, useEffect, useState } from 'react';
-import { dateExtractor } from '../../utils/getFirstDayOfMonth';
+import { dateExtractor } from '../../utils/dateExtractor';
 import { AppContext } from '../../context/AppContext';
 
 export function DateRange() {
