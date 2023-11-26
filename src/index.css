@@ -3,10 +3,6 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'Pixelify';
-  src: url('./assets/fonts/PixelifySans-VariableFont_wght.ttf');
-}
-@font-face {
   font-family: 'Inter';
   src: url('./assets/fonts/Inter-VariableFont_slnt,wght.ttf');
 }

@@ -2,3 +2,15 @@
   background-color: #242424;
   overflow-x: hidden;
 }
+
+ul {
+  max-height: fit-content !important;
+}
+
+.date-range button {
+  @apply rounded-md;
+}
+
+.date-range > div:nth-child(3) {
+  @apply mt-2 w-full;
+}

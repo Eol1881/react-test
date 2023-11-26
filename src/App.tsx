@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Root } from './routes/Root';
 
 import { ErrorPage } from './routes/ErrorPage';
+import { AppContextProvider } from './context/AppContext';
 
 export const routerConfig = [
   {
@@ -15,5 +16,9 @@ export const routerConfig = [
 const router = createBrowserRouter(routerConfig);
 
 export const App: React.FC = () => {
-  return <RouterProvider router={router} />;
+  return (
+    <AppContextProvider>
+      <RouterProvider router={router} />;
+    </AppContextProvider>
+  );
 };
