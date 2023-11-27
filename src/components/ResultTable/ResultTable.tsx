@@ -68,7 +68,7 @@ export const ResultTable: React.FC<Props> = ({ expenses, setExpenses, dateRange 
                   if (expense.type === expenseType) return expense;
                 })?.icon()}
               </TableCell>
-              <TableCell>
+              <TableCell className="px-0">
                 <Text>
                   {
                     EXPENSES_MAP.find((expense) => {

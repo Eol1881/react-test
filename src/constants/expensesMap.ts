@@ -14,7 +14,7 @@ export const EXPENSES_MAP = [
   {
     type: 'household',
     icon: icons.IconHousehold,
-    label: 'Бытовые расходники',
+    label: 'Бытовые расходы',
   },
   {
     type: 'medicine',

@@ -2,6 +2,7 @@ import { DonutChart } from '@tremor/react';
 
 import { Expense } from '../../api/types';
 import { getTotalExpenses } from '../../utils/getTotalExpenses';
+import { EXPENSES_MAP } from '../../constants/expensesMap';
 
 interface Props {
   expenses: Expense[];
@@ -9,7 +10,7 @@ interface Props {
 
 export const TotalChart: React.FC<Props> = ({ expenses }) => {
   const totalExpensesArray = Object.entries(getTotalExpenses(expenses)).map(([type, value]) => ({
-    name: type,
+    name: EXPENSES_MAP.find((expense) => expense.type === type)?.label,
     sales: value,
   }));
 
