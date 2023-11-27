@@ -1,16 +1,18 @@
 import { DateRangePicker, DateRangePickerItem, DateRangePickerValue } from '@tremor/react';
 import { ru } from 'date-fns/locale';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { dateExtractor } from '../../utils/dateExtractor';
-import { AppContext } from '../../context/AppContext';
+import { DateRange } from '../../routes/Root';
 
-export function DateRange() {
+interface Props {
+  setDateRange: React.Dispatch<React.SetStateAction<DateRange>>;
+}
+
+export const DatePicker: React.FC<Props> = ({ setDateRange }) => {
   const [value, setValue] = useState<DateRangePickerValue>({
     from: dateExtractor.getFirstDayOfMonth(),
     to: dateExtractor.getThisDay(),
   });
-
-  const { setDateRange } = useContext(AppContext);
 
   useEffect(() => {
     if (!value.from || !value.to) return;
@@ -49,4 +51,4 @@ export function DateRange() {
       </DateRangePickerItem>
     </DateRangePicker>
   );
-}
+};

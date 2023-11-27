@@ -1,19 +1,24 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, Table, TableBody, TableCell, Bold, TableRow, Text, Title } from '@tremor/react';
 import { EXPENSES_MAP } from '../../constants/expensesMap';
 import { Expense } from '../../api/types';
 import { fetchExpenses } from '../../api/api';
-import { AppContext } from '../../context/AppContext';
+import { DateRange } from '../../routes/Root';
 
 type TotalExpenses = {
   [key: string]: number;
 };
 
-export const ResultTable = () => {
+interface Props {
+  dateRange: DateRange;
+  setExpenses: React.Dispatch<React.SetStateAction<Expense[]>>;
+  expenses: Expense[];
+}
+
+export const ResultTable: React.FC<Props> = ({ expenses, setExpenses, dateRange }) => {
   const [totalExpenses, setTotalExpenses] = useState<TotalExpenses>({});
   const [summary, setSummary] = useState<number>(0);
 
-  const { dateRange, setExpenses, expenses } = useContext(AppContext);
   const { from, to } = dateRange;
 
   useEffect(() => {

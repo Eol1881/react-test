@@ -1,21 +1,23 @@
 import { Card, Metric, NumberInput, Button } from '@tremor/react';
 import { CurrencyDollarIcon } from '@heroicons/react/solid';
 import { ExpenseSelect } from './ExpenseSelect';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { ExpenseType } from '../../constants/expensesMap';
 import { addExpenseToDatabase } from '../../api/firebase';
-import { AppContext } from '../../context/AppContext';
-
 import { ArrowRightIcon } from '@heroicons/react/outline';
 import { useNavigate } from 'react-router-dom';
+import { Expense } from '../../api/types';
 
-export const NewExpense = () => {
+interface Props {
+  expenses: Expense[];
+  setExpenses: React.Dispatch<React.SetStateAction<Expense[]>>;
+}
+
+export const NewExpense: React.FC<Props> = ({ expenses, setExpenses }) => {
   const navigate = useNavigate();
 
   const [value, setValue] = useState<number>(0);
   const [expenseType, setExpenseType] = useState<ExpenseType>('other');
-
-  const { expenses, setExpenses } = useContext(AppContext);
 
   async function addExpenseHandler() {
     if (!value) return;
