@@ -10,6 +10,10 @@ export interface DateRange {
   to: Date;
 }
 
+export type TotalExpenses = {
+  [key: string]: number;
+};
+
 const defaultDateRange: DateRange = {
   from: dateExtractor.getFirstDayOfMonth(),
   to: new Date(),

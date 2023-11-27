@@ -4,6 +4,7 @@ import { EXPENSES_MAP } from '../../constants/expensesMap';
 import { Expense } from '../../api/types';
 import { fetchExpenses } from '../../api/api';
 import { DateRange } from '../../routes/Root';
+import { TotalChart } from '../TotalChart/TotalChart';
 
 type TotalExpenses = {
   [key: string]: number;
@@ -92,6 +93,7 @@ export const ResultTable: React.FC<Props> = ({ expenses, setExpenses, dateRange 
           </TableRow>
         </TableBody>
       </Table>
+      <TotalChart expenses={expenses}></TotalChart>
     </Card>
   );
 };
